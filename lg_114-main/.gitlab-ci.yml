@@ -1,0 +1,60 @@
+# Example  .gitlab-ci.yml file
+stages:
+  - maventry
+  - androidtry
+  - androidTestTry
+  - noahtry
+  - maxtry
+  
+
+maven-build:   #this is a JOB
+  stage: maventry
+  tags:
+    - springboot_tag  					# this is LINK to the shell runner on the remote-server 
+  script:
+    - cd Backend					#change directory to where you have your springboot application
+    - cd AccountHashMap
+    - cd AccountHashMap
+    - mvn package
+
+android-build: #this is another job
+  image:  gjandres/android-ci:latest      		# this is a directive to DOCKER
+  stage: androidTestTry
+  tags:
+   - android_tag         					#this is LINK to the docker runner on the remote-server        
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/PetrolPal/two_screen_counter/gradlew			#change directory to where you have ‘gradlew’ in your android directory
+  script:
+    - cd Frontend/PetrolPal/two_screen_counter					#change directory to where you have your android application
+    - ./gradlew assemble
+
+android-test: #this is another job
+  image:  gjandres/android-ci:latest      		# this is a directive to DOCKER
+  stage: androidtry
+  tags:
+   - android_tag         					#this is LINK to the docker runner on the remote-server        
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/PetrolPal/two_screen_counter/gradlew			#change directory to where you have ‘gradlew’ in your android directory
+  script:
+    - cd Frontend/PetrolPal/two_screen_counter					#change directory to where you have your android application
+    - ./gradlew test
+
+noah-build:   #this is a JOB
+  stage: noahtry
+  tags:
+    - NoahRunner  					# this is LINK to the shell runner on the remote-server 
+  script:
+    - touch noahfile.txt
+    - rm noahfile.txt					# create and delete file
+
+max-build:   #this is a JOB
+  stage: maxtry
+  tags:
+    - MaxRunner  					# this is LINK to the shell runner on the remote-server 
+  script:
+    - touch maxfile.txt
+    - rm maxfile.txt
+
+

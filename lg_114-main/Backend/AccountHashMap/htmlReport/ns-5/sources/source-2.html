@@ -1,0 +1,284 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > GasInfo</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.gas</a>
+</div>
+
+<h1>Coverage Summary for Class: GasInfo (org.example.gas)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GasInfo</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.8%
+  </span>
+  <span class="absValue">
+    (11/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    32.4%
+  </span>
+  <span class="absValue">
+    (11/34)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GasInfo$HibernateProxy$IxrhxOom</td>
+  </tr>
+  <tr>
+    <td class="name">GasInfo$HibernateProxy$OJz80W0p</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    45.8%
+  </span>
+  <span class="absValue">
+    (11/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    32.4%
+  </span>
+  <span class="absValue">
+    (11/34)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.gas;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import io.swagger.annotations.ApiModelProperty;
+&nbsp;import org.example.account.accountInfo;
+&nbsp;
+&nbsp;import org.example.map.Geoapify;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(
+&nbsp;        name = &quot;GasInfo&quot;
+&nbsp;)
+&nbsp;public class GasInfo {
+&nbsp;
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long gasId;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;username tied to gas station&quot;,name=&quot;username&quot;,required=true)
+&nbsp;    @Column(name = &quot;username&quot;)
+&nbsp;    private String username;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;station name&quot;,name=&quot;stationName&quot;,required=true)
+&nbsp;    @Column(name = &quot;stationName&quot;)
+&nbsp;    private String stationName;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;price of gas&quot;,name=&quot;price&quot;,required=true)
+&nbsp;    @Column(name = &quot;price&quot;)
+&nbsp;    private double price;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;address of station&quot;,name=&quot;address&quot;,required=true)
+&nbsp;    @Column(name = &quot;address&quot;)
+&nbsp;    private String address;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;description of gas station&quot;,name=&quot;description&quot;,required=true)
+&nbsp;    @Column(name = &quot;description&quot;)
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;status message for http requests&quot;,name=&quot;status&quot;,required=true)
+&nbsp;    @Column(name = &quot;status&quot;)
+&nbsp;    private String status;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;longitude of gas station&quot;,name=&quot;lon&quot;,required=true)
+&nbsp;    @Column(name = &quot;lon&quot;)
+&nbsp;    private double lon;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;latitude of gas station&quot;,name=&quot;lat&quot;,required=true)
+&nbsp;    @Column(name = &quot;lat&quot;)
+&nbsp;    private double lat;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;used that owns gas station&quot;,name=&quot;userID&quot;,required=true)
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;)
+&nbsp;    @JsonIgnore
+&nbsp;    private accountInfo userID;
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;distance calculated&quot;,name=&quot;dist&quot;,required=true)
+&nbsp;    private double dist;
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public GasInfo(){}</b>
+<b class="nc">&nbsp;    public GasInfo(Long gasId, String username, String stationName, double price, String address, String description, double lon, double lat, double dist){</b>
+<b class="nc">&nbsp;        this.gasId = gasId;</b>
+<b class="nc">&nbsp;        this.username = username;</b>
+<b class="nc">&nbsp;        this.stationName = stationName;</b>
+<b class="nc">&nbsp;        this.price = price;</b>
+<b class="nc">&nbsp;        this.address = address;</b>
+<b class="nc">&nbsp;        this.description = description;</b>
+<b class="nc">&nbsp;        this.status = status;</b>
+<b class="nc">&nbsp;        this.lon = lon;</b>
+<b class="nc">&nbsp;        this.lat = lat;</b>
+<b class="nc">&nbsp;        this.dist = dist;</b>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public Long getGasId(){
+<b class="fc">&nbsp;        return gasId;</b>
+&nbsp;    }
+&nbsp;    public void setGasId(Long id){
+<b class="nc">&nbsp;        this.gasId = gasId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getUsername(){
+<b class="fc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;    public void setUsername(String username){
+<b class="nc">&nbsp;        this.username = username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getStationName(){
+<b class="fc">&nbsp;        return stationName;</b>
+&nbsp;    }
+&nbsp;    public void setStationName(String stationName){
+<b class="nc">&nbsp;        this.stationName = stationName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Double getPrice(){
+<b class="fc">&nbsp;        return price;</b>
+&nbsp;    }
+&nbsp;    public void setPrice(Double price){
+<b class="nc">&nbsp;        this.price = price;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAddress(){
+<b class="fc">&nbsp;        return address;</b>
+&nbsp;    }
+&nbsp;    public void setAddress(String address){
+<b class="nc">&nbsp;        this.address = address;</b>
+&nbsp;    }
+&nbsp;    public String getDescription(){
+<b class="fc">&nbsp;        return description;</b>
+&nbsp;    }
+&nbsp;    public void setDescription(String description){
+<b class="nc">&nbsp;        this.description = description;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getStatus(){
+<b class="fc">&nbsp;        return status;</b>
+&nbsp;    }
+&nbsp;    public void setStatus(String status){
+<b class="nc">&nbsp;        this.status = status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Double getLon(){
+<b class="fc">&nbsp;        return lon;}</b>
+&nbsp;    public void setLon(Double lon){
+<b class="nc">&nbsp;        this.lon = lon;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Double getLat(){
+<b class="fc">&nbsp;        return lat;}</b>
+&nbsp;    public void setLat(Double lat){
+<b class="nc">&nbsp;        this.lat = lat;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Double getDist(){
+<b class="fc">&nbsp;        return dist;}</b>
+&nbsp;    public void setDist(Double dist){
+<b class="nc">&nbsp;        this.dist = dist;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public accountInfo getUserID(){
+<b class="nc">&nbsp;        return userID;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUserID(accountInfo userID) {
+<b class="nc">&nbsp;        this.userID = userID;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

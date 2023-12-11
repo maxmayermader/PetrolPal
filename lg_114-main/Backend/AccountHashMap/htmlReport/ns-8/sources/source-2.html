@@ -1,0 +1,183 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ReviewController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.reviews</a>
+</div>
+
+<h1>Coverage Summary for Class: ReviewController (org.example.reviews)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ReviewController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.reviews;
+&nbsp;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import io.swagger.annotations.ApiOperation;
+&nbsp;import io.swagger.annotations.ApiResponse;
+&nbsp;import io.swagger.annotations.ApiResponses;
+&nbsp;import org.example.account.UserRepo;
+&nbsp;import org.example.account.accountInfo;
+&nbsp;import org.example.gas.GasInfo;
+&nbsp;import org.example.gas.GasRepo;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Api(value = &quot;ReviewController&quot;, description = &quot;REST Apis related to Review&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class ReviewController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ReviewRepo reviewRepo;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepo userRepo;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GasRepo gasRepo;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get list of Reviews in the System &quot;, response = Iterable.class, tags = &quot;getAllReviews&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(code = 200, message = &quot;Suceess|OK&quot;),
+&nbsp;            @ApiResponse(code = 401, message = &quot;not authorized!&quot;),
+&nbsp;            @ApiResponse(code = 403, message = &quot;forbidden!!!&quot;),
+&nbsp;            @ApiResponse(code = 404, message = &quot;not found!!!&quot;) })
+&nbsp;    @GetMapping(&quot;/review/all&quot;)
+&nbsp;    List&lt;Review&gt; getAllReviews(){
+<b class="fc">&nbsp;        return reviewRepo.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Post a review given gas station id and user id&quot;, response = Review.class, tags = &quot;makeReview&quot;)
+&nbsp;    @PostMapping(&quot;/review/post/{gasid}/{userid}&quot;)
+&nbsp;    Review makeReview(@PathVariable long gasid, @PathVariable long userid, @RequestBody Review review){
+<b class="fc">&nbsp;        GasInfo station = gasRepo.getByGasId(gasid);</b>
+<b class="fc">&nbsp;        accountInfo user = userRepo.findById(userid);</b>
+&nbsp;
+<b class="fc">&nbsp;        review.setGasID(station);</b>
+<b class="fc">&nbsp;        review.setUserID(user);</b>
+&nbsp;
+<b class="fc">&nbsp;        reviewRepo.save(review);</b>
+<b class="fc">&nbsp;        return review;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get a review given review id&quot;, response = Review.class, tags = &quot;getByReviewID&quot;)
+&nbsp;    @GetMapping(&quot;/review/get/{id}&quot;)
+&nbsp;    Review getByReviewID(@PathVariable long id){
+<b class="fc">&nbsp;        return reviewRepo.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get accountInfo given review id&quot;, response = accountInfo.class, tags = &quot;getUserByReviewID&quot;)
+&nbsp;    @GetMapping(&quot;/review/user/{id}&quot;)
+&nbsp;    accountInfo getUserByReviewID(@PathVariable long id){
+<b class="fc">&nbsp;        return reviewRepo.findById(id).getUserID();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get a gas station given review id&quot;, response = GasInfo.class, tags = &quot;getStationByReviewID&quot;)
+&nbsp;    @GetMapping(&quot;/review/station/{id}&quot;)
+&nbsp;    GasInfo getStationByReviewID(@PathVariable long id){
+<b class="fc">&nbsp;        return reviewRepo.findById(id).getGasID();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get all reviews on a station given station id&quot;, response = Review.class, tags = &quot;makeReview&quot;)
+&nbsp;    @GetMapping(&quot;/reviews/station/{id}&quot;)
+&nbsp;    List&lt;Review&gt; getAllReviewsByGasID(@PathVariable long id){
+<b class="fc">&nbsp;        GasInfo station = gasRepo.getByGasId(id);</b>
+<b class="fc">&nbsp;        return reviewRepo.findAllByGasID(station);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

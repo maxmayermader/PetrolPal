@@ -1,0 +1,270 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ChatSocket</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.websocket</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatSocket (org.example.websocket)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatSocket</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.1%
+  </span>
+  <span class="absValue">
+    (3/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.8%
+  </span>
+  <span class="absValue">
+    (5/57)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.websocket;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import javax.websocket.OnClose;
+&nbsp;import javax.websocket.OnError;
+&nbsp;import javax.websocket.OnMessage;
+&nbsp;import javax.websocket.OnOpen;
+&nbsp;import javax.websocket.Session;
+&nbsp;import javax.websocket.server.PathParam;
+&nbsp;import javax.websocket.server.ServerEndpoint;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@ServerEndpoint(value = &quot;/chat/{username}&quot;, configurator = ChatSocketConfig.class)
+<b class="fc">&nbsp;public class ChatSocket {</b>
+&nbsp;
+&nbsp;	private static MessageRepository msgRepo;
+&nbsp;	private String s;
+&nbsp;	@Autowired
+&nbsp;	public void setMessageRepository(MessageRepository repo) {
+<b class="fc">&nbsp;		msgRepo = repo;</b>
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	private static Map&lt;Session, String&gt; sessionUsernameMap = new Hashtable&lt;&gt;();</b>
+<b class="fc">&nbsp;	private static Map&lt;String, Session&gt; usernameSessionMap = new Hashtable&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;	private final Logger logger = LoggerFactory.getLogger(ChatSocket.class);</b>
+&nbsp;
+&nbsp;	@OnOpen
+&nbsp;	public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) throws IOException {
+<b class="nc">&nbsp;		logger.info(&quot;Entered into Open&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		sessionUsernameMap.put(session, username);</b>
+<b class="nc">&nbsp;		usernameSessionMap.put(username, session);</b>
+&nbsp;
+<b class="nc">&nbsp;		sendMessageToPArticularUser(username, getChatHistory(username));</b>
+&nbsp;
+<b class="nc">&nbsp;		String message = &quot;User:&quot; + username + &quot; has Joined the Chat&quot;;</b>
+<b class="nc">&nbsp;		broadcast(message);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	@OnMessage
+&nbsp;	public void onMessage(Session session, String message) throws IOException {
+&nbsp;
+<b class="nc">&nbsp;		logger.info(&quot;Entered into Message: Got Message:&quot; + message);</b>
+<b class="nc">&nbsp;		String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+&nbsp;		// Direct message to a user using the format &quot;@username &lt;message&gt;&quot;
+<b class="nc">&nbsp;		if (message.startsWith(&quot;@&quot;)) {</b>
+<b class="nc">&nbsp;			String[] messageParts = message.split(&quot; &quot;, 2); // Split the message into two parts: recipient and message</b>
+<b class="nc">&nbsp;			String recipientUsername = messageParts[0].substring(1); // Extract recipient&#39;s username</b>
+<b class="nc">&nbsp;			String messageContent = messageParts[1]; //  	 	Extract the message content</b>
+&nbsp;
+&nbsp;			// Ensure the recipient&#39;s session exists
+<b class="nc">&nbsp;			Session recipientSession = usernameSessionMap.get(recipientUsername);</b>
+<b class="nc">&nbsp;			s = recipientUsername;</b>
+<b class="nc">&nbsp;			if (recipientSession != null) {//if recipient is connected send message to both user and recepient</b>
+<b class="nc">&nbsp;				sendMessageToPArticularUser(recipientUsername, &quot;[TO] &quot; + username + &quot;: &quot; + messageContent);</b>
+<b class="nc">&nbsp;				sendMessageToPArticularUser(username, &quot;[FROM] &quot; + username + &quot;: &quot; + messageContent);</b>
+&nbsp;
+&nbsp;			}
+&nbsp;			else{ //if not connected send message to just user, stores message
+<b class="nc">&nbsp;				sendMessageToPArticularUser(username, &quot;[FROM] &quot; + username + &quot;: &quot; + messageContent);</b>
+&nbsp;
+&nbsp;			}
+<b class="nc">&nbsp;		} else {</b>
+&nbsp;			// Broadcast the message
+<b class="nc">&nbsp;			broadcast(username + &quot;: &quot; + message);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// Saving chat history to repository
+<b class="nc">&nbsp;		msgRepo.save(new Message(username, message));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	@OnClose
+&nbsp;	public void onClose(Session session) throws IOException {
+<b class="nc">&nbsp;		logger.info(&quot;Entered into Close&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		String username = sessionUsernameMap.get(session);</b>
+<b class="nc">&nbsp;		sessionUsernameMap.remove(session);</b>
+<b class="nc">&nbsp;		usernameSessionMap.remove(username);</b>
+&nbsp;
+<b class="nc">&nbsp;		String message = username + &quot; disconnected&quot;;</b>
+<b class="nc">&nbsp;		broadcast(message);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	@OnError
+&nbsp;	public void onError(Session session, Throwable throwable) {
+<b class="nc">&nbsp;		logger.info(&quot;Entered into Error&quot;);</b>
+<b class="nc">&nbsp;		throwable.printStackTrace();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	private void sendMessageToPArticularUser(String username, String message) {
+&nbsp;		try {
+<b class="nc">&nbsp;			usernameSessionMap.get(username).getBasicRemote().sendText(message);</b>
+&nbsp;		}
+<b class="nc">&nbsp;    catch (IOException e) {</b>
+<b class="nc">&nbsp;			logger.info(&quot;Exception: &quot; + e.getMessage().toString());</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	private void broadcast(String message) {
+<b class="nc">&nbsp;		sessionUsernameMap.forEach((session, username) -&gt; {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				session.getBasicRemote().sendText(message);</b>
+&nbsp;			}
+<b class="nc">&nbsp;      catch (IOException e) {</b>
+<b class="nc">&nbsp;				logger.info(&quot;Exception: &quot; + e.getMessage().toString());</b>
+<b class="nc">&nbsp;				e.printStackTrace();</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+&nbsp;		});
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	private String getChatHistory(String username) {
+<b class="nc">&nbsp;		List&lt;Message&gt; messages = msgRepo.findAll();</b>
+&nbsp;
+&nbsp;		// Convert the list to a string
+<b class="nc">&nbsp;		StringBuilder sb = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (messages != null &amp;&amp; messages.size() != 0) {</b>
+<b class="nc">&nbsp;			for (Message message : messages) {</b>
+&nbsp;				// Check if the message is not a private message or if it&#39;s a private message directed to the new user
+<b class="nc">&nbsp;				if (!isPrivateMessage(message) || isMessageForUser(message, username) || message.getUserName().equals(username)) {</b>
+<b class="nc">&nbsp;					sb.append(message.getUserName() + &quot;: &quot; + message.getContent() + &quot;\n&quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return sb.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean isPrivateMessage(Message message) {
+&nbsp;		// Check if the message content starts with &quot;@&quot; followed by a username
+<b class="nc">&nbsp;		String content = message.getContent();</b>
+<b class="nc">&nbsp;		return content.startsWith(&quot;@&quot;) &amp;&amp; content.contains(&quot; &quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Helper method to check if a private message is directed to a specific user
+&nbsp;	private boolean isMessageForUser(Message message, String username) {
+<b class="nc">&nbsp;		String content = message.getContent();</b>
+<b class="nc">&nbsp;		return content.contains(&quot;@&quot; + username);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

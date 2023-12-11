@@ -1,0 +1,361 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > accountController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.account</a>
+</div>
+
+<h1>Coverage Summary for Class: accountController (org.example.account)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">accountController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (12/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.8%
+  </span>
+  <span class="absValue">
+    (48/65)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.account;
+&nbsp;
+&nbsp;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import io.swagger.annotations.ApiOperation;
+&nbsp;import io.swagger.annotations.ApiResponse;
+&nbsp;import io.swagger.annotations.ApiResponses;
+&nbsp;import org.example.gas.GasController;
+&nbsp;import org.example.gas.GasInfo;
+&nbsp;import org.example.gas.GasRepo;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Api(value = &quot;accountController&quot;, description = &quot;REST Apis related to the Account Information&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class  accountController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepo accountInfoRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GasRepo gasRepo;
+&nbsp;
+&nbsp;    public accountInfo currentUser;
+&nbsp;  //  accountInfo deleteUser;
+&nbsp;
+&nbsp;    List&lt;accountInfo&gt; deleteUser;
+&nbsp;    accountInfo value;
+&nbsp;    @Autowired
+&nbsp;    private GasController gasController;
+&nbsp;
+&nbsp;    private String status;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get list of accounts in the tables &quot;, response = accountInfo.class)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(code = 200, message = &quot;OK&quot;),
+&nbsp;            @ApiResponse(code = 401, message = &quot;not authorized&quot;),
+&nbsp;            @ApiResponse(code = 403, message = &quot;forbidden&quot;),
+&nbsp;            @ApiResponse(code = 404, message = &quot;not found&quot;) })
+&nbsp;    //displays all the accounts in map
+&nbsp;    @GetMapping(&quot;/account&quot;)
+&nbsp;    public List&lt;accountInfo&gt; getAllAccounts() {
+<b class="fc">&nbsp;        return accountInfoRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //method used for adding another account
+&nbsp;    //takes in json request {&quot;username&quot;: &quot;bob&quot;, &quot;password&quot;: &quot;123&quot;,.....}
+&nbsp;    @ApiOperation(value = &quot;Post create account in table &quot;, response = accountInfo.class)
+&nbsp;
+&nbsp;    @PostMapping(&quot;/account&quot;)
+&nbsp;    public accountInfo createAccount(@RequestBody accountInfo info) {
+&nbsp;
+<b class="fc">&nbsp;        if (accountInfoRepository.findByUsername(info.getUsername()).isEmpty()) {</b>
+<b class="fc">&nbsp;            accountInfoRepository.save(info);</b>
+<b class="fc">&nbsp;            currentUser = info;</b>
+&nbsp;
+<b class="fc">&nbsp;            currentUser.setStatus(&quot;good&quot;);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="nc">&nbsp;            currentUser = new accountInfo(1L, &quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;duplicate&quot;);</b>
+&nbsp;
+&nbsp;        }
+<b class="fc">&nbsp;            return currentUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;public List&lt;accountInfo&gt; correctLogin;
+&nbsp;
+&nbsp;    public accountInfo returnValue;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Post username and password to see if they are in table for login &quot;, response = accountInfo.class)
+&nbsp;
+&nbsp;    @PostMapping(&quot;/account/login/{username}/{password}&quot;)
+&nbsp;    public accountInfo loginCheck(@PathVariable String username, @PathVariable String password){
+<b class="fc">&nbsp;        currentUser = null;</b>
+<b class="fc">&nbsp;        correctLogin = null;</b>
+&nbsp;
+<b class="fc">&nbsp;        correctLogin = accountInfoRepository.findByUsername(username);</b>
+<b class="fc">&nbsp;        currentUser = accountInfoRepository.findByUsernameAndPassword(username, password);</b>
+<b class="fc">&nbsp;        if (correctLogin.isEmpty()){</b>
+<b class="nc">&nbsp;            currentUser = new accountInfo(1L, &quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;missing&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        else if ( !correctLogin.get(0).getPassword().equals(password)) {</b>
+<b class="fc">&nbsp;            currentUser = new accountInfo(1L, &quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;wrong&quot;);</b>
+&nbsp;
+&nbsp;        }
+<b class="nc">&nbsp;        else if (currentUser != null) {</b>
+<b class="nc">&nbsp;            currentUser.setStatus(&quot;true&quot;);</b>
+&nbsp;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return currentUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/account/{id}/{newPassword}&quot;)
+&nbsp;    public Map&lt;String, String&gt; setPassword(@PathVariable Long id, @PathVariable String newPassword){
+<b class="fc">&nbsp;        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        currentUser = accountInfoRepository.findById(id);</b>
+<b class="fc">&nbsp;        if(currentUser.getPassword().equals(newPassword)){</b>
+<b class="fc">&nbsp;            response.put(&quot;key&quot;, &quot;same&quot;);</b>
+<b class="fc">&nbsp;            return response;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        currentUser.setPassword(newPassword);</b>
+<b class="nc">&nbsp;        accountInfoRepository.save(currentUser);</b>
+<b class="nc">&nbsp;        response.put(&quot;key&quot;, &quot;success&quot;);</b>
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;    /**
+&nbsp;     * public Map&lt;String, String&gt; delete(@PathVariable String username) {
+&nbsp;     *
+&nbsp;     *         deleteUser = accountInfoRepository.findByUsername(username);
+&nbsp;     *
+&nbsp;     *         accountInfoRepository.deleteAll(deleteUser);
+&nbsp;     *         gasController.deleteGas(username);
+&nbsp;     *         Map&lt;String, String&gt; response = new HashMap&lt;&gt;();
+&nbsp;     *         response.put(&quot;username&quot;, username);
+&nbsp;     *
+&nbsp;     *         return response;
+&nbsp;     * @return
+&nbsp;     */
+&nbsp;
+&nbsp;    //method return object information of login user
+&nbsp;    @GetMapping(&quot;/account/login/info&quot;)
+&nbsp;    public accountInfo getAllInfo() {
+<b class="nc">&nbsp;        return currentUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    //deletes account and gas stations associated
+&nbsp;    @ApiOperation(value = &quot;Delete account by username and children associated &quot;, response = accountInfo.class)
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;userDelete/{username}&quot;)
+&nbsp;    public Map&lt;String, String&gt; delete(@PathVariable String username) {
+&nbsp;
+<b class="fc">&nbsp;        deleteUser = accountInfoRepository.findByUsername(username);</b>
+&nbsp;
+<b class="fc">&nbsp;        accountInfoRepository.deleteAll(deleteUser);</b>
+<b class="fc">&nbsp;        gasController.deleteGas(username);</b>
+<b class="fc">&nbsp;        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        response.put(&quot;username&quot;, username);</b>
+&nbsp;
+<b class="fc">&nbsp;        return response;</b>
+&nbsp;        //returns as json { &quot;username&quot;: &quot;bob&quot; }
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Put account to update account information &quot;, response = accountInfo.class)
+&nbsp;
+&nbsp;    @PostMapping(&quot;accountInfo/post/&quot;)
+&nbsp;    accountInfo PostAccountInfoByPath( @RequestBody accountInfo newAccnt) {
+<b class="nc">&nbsp;        System.out.println(accountInfoRepository.findAllByUsername(newAccnt.getUsername()));</b>
+<b class="nc">&nbsp;        if (accountInfoRepository.findAllByUsername(newAccnt.getUsername()).size() &gt; 1 ){</b>
+<b class="nc">&nbsp;            System.out.println(&quot;working!&quot;);</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;
+&nbsp;        }
+&nbsp;        //try {
+&nbsp;//            System.out.println(accountInfoRepository.findByUsernameAndPassword(newAccnt.getUsername(), newAccnt.getPassword()));
+&nbsp;//            if (accountInfoRepository.findByUsernameAndPassword(newAccnt.getUsername(), newAccnt.getPassword()) != null){
+&nbsp;//                System.out.println(&quot;Username already exists&quot;);
+&nbsp;//                return null;
+&nbsp;//            }
+&nbsp;//        //} catch (Exception e){
+&nbsp;//            System.out.println(&quot;Exception caught&quot;);
+&nbsp;//            System.out.println();
+&nbsp;//        //}
+&nbsp;
+<b class="nc">&nbsp;        accountInfoRepository.save(newAccnt);</b>
+<b class="nc">&nbsp;        return newAccnt;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Put account to update account information by ids &quot;, response = accountInfo.class)
+&nbsp;    @PutMapping(&quot;/accountInfo/put/{id}/station/{id2}&quot;)
+&nbsp;    public accountInfo updateAccount(@PathVariable long id,@PathVariable long id2, @RequestBody accountInfo info){
+<b class="fc">&nbsp;       accountInfo userRN = accountInfoRepository.findById(id);</b>
+<b class="fc">&nbsp;       GasInfo station = gasRepo.getByGasId(id2);</b>
+&nbsp;
+<b class="fc">&nbsp;       userRN.setFirstname(info.getFirstname());</b>
+<b class="fc">&nbsp;       userRN.setLastname(info.getLastname());</b>
+<b class="fc">&nbsp;       userRN.addGasStations(station);</b>
+<b class="fc">&nbsp;       userRN.setAccessLevel(info.getAccessLevel());</b>
+&nbsp;       //userRN.set
+&nbsp;
+<b class="fc">&nbsp;        accountInfoRepository.save(userRN);</b>
+<b class="fc">&nbsp;        currentUser = userRN;</b>
+<b class="fc">&nbsp;       return userRN;</b>
+&nbsp;    }
+&nbsp;    //@ApiOperation(value = &quot;Get stations owned by account&quot;, response = accountInfo.class)
+&nbsp;
+&nbsp;    //return a list of all gas stations owned by user
+&nbsp;    @ApiOperation(value = &quot;Get all stations owned by a user &quot;, response = Iterable.class)
+&nbsp;    @GetMapping(&quot;/accountInfo/{id}/allStations&quot;)
+&nbsp;    public List&lt;GasInfo&gt; getAllUserStations(@PathVariable long id){
+<b class="fc">&nbsp;        return accountInfoRepository.findById(id).getGasStations();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Edit a users staions given user id and station id
+&nbsp;//    @PutMapping(&quot;/accountInfo/put/editUserStation/{idu}/{ids}&quot;)
+&nbsp;//    GasInfo editUserStation(@PathVariable long idu, @PathVariable long ids, @RequestBody GasInfo staion){
+&nbsp;//        accountInfo currUser = accountInfoRepository.findById(idu);
+&nbsp;//        GasInfo currStation = GasController.putGas(ids, staion);
+&nbsp;//
+&nbsp;//    }
+&nbsp;
+&nbsp;    //get all favorite stations
+&nbsp;    @ApiOperation(value = &quot;Get all favourited stations by a user &quot;, response = Iterable.class)
+&nbsp;    @GetMapping(&quot;/accountInfo/favStations/{id}/all&quot;)
+&nbsp;    public List&lt;GasInfo&gt; getFavStations(@PathVariable Long id){
+<b class="fc">&nbsp;        return accountInfoRepository.findById(id).getFavStations();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //Put fav station
+&nbsp;    @ApiOperation(value = &quot;Put a favourited stations by a user &quot;, response = accountInfo.class)
+&nbsp;    @PutMapping(&quot;/accountInfo/{uid}/put/favStation/{sid}&quot;)
+&nbsp;    public accountInfo putFavStations(@PathVariable long uid, @PathVariable long sid){
+<b class="fc">&nbsp;        accountInfo user = accountInfoRepository.findById(uid);</b>
+<b class="fc">&nbsp;        user.addFavStation(gasRepo.getByGasId(sid));</b>
+<b class="fc">&nbsp;        accountInfoRepository.save(user);</b>
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Delete a favourited stations by a user &quot;, response = accountInfo.class)
+&nbsp;    @DeleteMapping(&quot;/accountInfo/del/{uid}/favStation/{sid}&quot;)
+&nbsp;    public accountInfo deleteFavStaion(@PathVariable long uid, @PathVariable long sid){
+<b class="fc">&nbsp;        accountInfo user = accountInfoRepository.findById(uid);</b>
+<b class="fc">&nbsp;        user.delFavStation(gasRepo.getByGasId(sid));</b>
+<b class="fc">&nbsp;        accountInfoRepository.save(user);</b>
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //find station in favList
+&nbsp;    @ApiOperation(value = &quot;Get a favourited stations by a user if it exists &quot;, response = boolean.class)
+&nbsp;    @GetMapping(&quot;/accountInfo/get/isFav/{uid}/{sid}&quot;)
+&nbsp;    public Map&lt;String, Boolean&gt; isInFav(@PathVariable long uid, @PathVariable long sid){
+<b class="fc">&nbsp;        Map&lt;String, Boolean&gt; val = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;         val.put(&quot;val&quot;,accountInfoRepository.findById(uid).isFav(gasRepo.getByGasId(sid)));</b>
+<b class="fc">&nbsp;        return val;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //Delete method
+&nbsp;    @DeleteMapping(&quot;/account/delete/{id}&quot;)
+&nbsp;    void deleteAccountByID(@PathVariable Long id){
+<b class="nc">&nbsp;        int ID = id.intValue();</b>
+<b class="nc">&nbsp;        accountInfoRepository.deleteById(ID);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

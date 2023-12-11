@@ -1,0 +1,178 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DealSocketConfigurator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.dealOfDay</a>
+</div>
+
+<h1>Coverage Summary for Class: DealSocketConfigurator (org.example.dealOfDay)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DealSocketConfigurator</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DealSocketConfigurator$$EnhancerBySpringCGLIB$$1148c83e</td>
+  </tr>
+  <tr>
+    <td class="name">DealSocketConfigurator$$EnhancerBySpringCGLIB$$9b053200</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.dealOfDay;
+&nbsp;
+&nbsp;import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+&nbsp;import org.springframework.web.socket.config.annotation.*;
+&nbsp;import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+&nbsp;
+&nbsp;//@Configuration
+&nbsp;//@EnableWebSocketMessageBroker
+&nbsp;//public class DealSocketConfigurator implements WebSocketMessageBrokerConfigurer {
+&nbsp;//    @Override
+&nbsp;//    public void registerStompEndpoints(StompEndpointRegistry registry) {
+&nbsp;//        registry.addEndpoint(&quot;/websocket-sockjs-stomp&quot;).withSockJS();
+&nbsp;//    }
+&nbsp;//    @Override
+&nbsp;//    public void configureMessageBroker(MessageBrokerRegistry registry) {
+&nbsp;//        registry.enableSimpleBroker(&quot;/queue&quot;, &quot;/topic&quot;);
+&nbsp;//        registry.setApplicationDestinationPrefixes(&quot;/app&quot;);
+&nbsp;//    }
+&nbsp;//}
+&nbsp;
+&nbsp;//@Configuration
+&nbsp;//@EnableWebSocketMessageBroker
+&nbsp;//public class DealSocketConfigurator extends AbstractWebSocketMessageBrokerConfigurer {
+&nbsp;//
+&nbsp;//    @Override
+&nbsp;//    public void configureMessageBroker(MessageBrokerRegistry config) {
+&nbsp;//        config.enableSimpleBroker(&quot;/topic&quot;);
+&nbsp;//        config.setApplicationDestinationPrefixes(&quot;/app&quot;);
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @Override
+&nbsp;//    public void registerStompEndpoints(StompEndpointRegistry registry) {
+&nbsp;//        registry.addEndpoint(&quot;/deal&quot;);
+&nbsp;//        registry.addEndpoint(&quot;/deal&quot;).withSockJS();
+&nbsp;//    }
+&nbsp;//}
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableWebSocket
+<b class="fc">&nbsp;public class DealSocketConfigurator extends javax.websocket.server.ServerEndpointConfig.Configurator //extends SpringBootServletInitializer</b>
+&nbsp;{
+&nbsp;
+&nbsp;//    @Override
+&nbsp;//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+&nbsp;//        registry.addHandler(myHandler(), &quot;/myHandler&quot;);
+&nbsp;//    }
+&nbsp;//
+&nbsp;//    @Bean
+&nbsp;//    public WebSocketHandler myHandler() {
+&nbsp;//        return new MyHandler();
+&nbsp;//    }
+&nbsp;
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public ServerEndpointExporter serverEndpointExporter() {
+<b class="nc">&nbsp;        return new ServerEndpointExporter();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

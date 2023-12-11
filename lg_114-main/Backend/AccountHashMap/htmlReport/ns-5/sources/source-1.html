@@ -1,0 +1,345 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > GasController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.gas</a>
+</div>
+
+<h1>Coverage Summary for Class: GasController (org.example.gas)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GasController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.8%
+  </span>
+  <span class="absValue">
+    (2/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.9%
+  </span>
+  <span class="absValue">
+    (3/61)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.gas;
+&nbsp;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;//import org.apache.http.HttpResponse;
+&nbsp;//import org.apache.http.client.HttpClient;
+&nbsp;//import org.apache.http.client.methods.HttpGet;
+&nbsp;//import org.apache.http.impl.client.HttpClients;
+&nbsp;//import org.apache.http.util.EntityUtils;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import io.swagger.annotations.ApiOperation;
+&nbsp;import io.swagger.annotations.ApiResponse;
+&nbsp;import io.swagger.annotations.ApiResponses;
+&nbsp;import org.example.account.UserRepo;
+&nbsp;import org.example.account.accountInfo;
+&nbsp;import org.example.map.Geoapify;
+&nbsp;import org.example.reviews.Review;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;//import org.apache.http.HttpResponse;
+&nbsp;//import org.apache.http.client.HttpClient;
+&nbsp;//import org.apache.http.client.methods.HttpGet;
+&nbsp;//import org.apache.http.impl.client.HttpClients;
+&nbsp;//import org.apache.http.util.EntityUtils;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.net.URLEncoder;
+&nbsp;import java.net.URLEncoder;
+&nbsp;import java.util.*;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Api(value = &quot;GasController&quot;, description = &quot;REST Apis related to GasInfo&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class GasController {</b>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GasRepo gasControllerRepo;
+&nbsp;    @Autowired
+&nbsp;    private UserRepo userRepo;
+&nbsp;
+&nbsp;    public List&lt;GasInfo&gt; deleteGas;
+&nbsp;
+&nbsp;    public List&lt;GasInfo&gt; deleteGasID;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    GasInfo deleteID;
+&nbsp;    GasInfo currentGas;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get list of stations in the system&quot;, response = Iterable.class, tags = &quot;getAllAccounts&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(code = 200, message = &quot;Suceess|OK&quot;),
+&nbsp;            @ApiResponse(code = 401, message = &quot;not authorized!&quot;),
+&nbsp;            @ApiResponse(code = 403, message = &quot;forbidden!!!&quot;),
+&nbsp;            @ApiResponse(code = 404, message = &quot;not found!!!&quot;) })
+&nbsp;    @GetMapping(&quot;/station/all&quot;)
+&nbsp;    public List&lt;GasInfo&gt; getAllAccounts() {
+<b class="nc">&nbsp;        return gasControllerRepo.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //creates new gas station
+&nbsp;    @ApiOperation(value = &quot;Post new station&quot;, response = GasInfo.class, tags = &quot;createGas&quot;)
+&nbsp;    @PostMapping(&quot;/station/post&quot;)
+&nbsp;    public GasInfo createGas(@RequestBody GasInfo info) {
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        gasControllerRepo.save(info);</b>
+<b class="nc">&nbsp;        currentGas = info;</b>
+&nbsp;
+<b class="nc">&nbsp;        Geoapify.addessConvert(currentGas);</b>
+<b class="nc">&nbsp;        gasControllerRepo.save(currentGas);</b>
+<b class="nc">&nbsp;        this.currentGas = currentGas;</b>
+<b class="nc">&nbsp;        return currentGas;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //Edits a new station
+&nbsp;    @ApiOperation(value = &quot;Put to gas station&quot;, response = GasInfo.class, tags = &quot;putGas&quot;)
+&nbsp;    @PutMapping(&quot;/station/put/{id}&quot;)
+&nbsp;    public GasInfo putGas(@PathVariable Long id, @RequestBody GasInfo info) {
+<b class="nc">&nbsp;        GasInfo station = gasControllerRepo.getByGasId(id);</b>
+<b class="nc">&nbsp;        if (station == null){</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        station.setAddress(info.getAddress());</b>
+<b class="nc">&nbsp;        station.setUsername(info.getUsername());</b>
+<b class="nc">&nbsp;        station.setUserID(info.getUserID());</b>
+<b class="nc">&nbsp;        station.setPrice(info.getPrice());</b>
+<b class="nc">&nbsp;        station.setDescription(info.getDescription());</b>
+<b class="nc">&nbsp;        station.setStatus(info.getStatus());</b>
+&nbsp;
+<b class="nc">&nbsp;        gasControllerRepo.save(station);</b>
+<b class="nc">&nbsp;        currentGas = station;</b>
+<b class="nc">&nbsp;        return currentGas;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //returns object
+&nbsp;    @GetMapping(&quot;/station&quot;)
+&nbsp;    public GasInfo getCurrStation(){
+<b class="nc">&nbsp;        return currentGas;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;//    //returns object
+&nbsp;//    @GetMapping(&quot;/station&quot;)
+&nbsp;//    public GasInfo getGas() {
+&nbsp;//
+&nbsp;//        return currentGas;
+&nbsp;//    }
+&nbsp;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get username tied to a gas station&quot;, response = GasInfo.class, tags = &quot;getStaionUN&quot;)
+&nbsp;    @GetMapping(&quot;/station/username&quot;)
+&nbsp;    String getStationUN(){
+<b class="nc">&nbsp;        return currentGas.getUsername();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get station name&quot;, response = String.class, tags = &quot;getStationName&quot;)
+&nbsp;    @GetMapping(&quot;/station/name&quot;)
+&nbsp;    String getStationName(){
+<b class="nc">&nbsp;        return currentGas.getStationName();</b>
+&nbsp;    }
+&nbsp;    @ApiOperation(value = &quot;Get station address&quot;, response = String.class, tags = &quot;getStationAddress&quot;)
+&nbsp;    @GetMapping(&quot;/station/address&quot;)
+&nbsp;    String getStationAddress(){
+<b class="nc">&nbsp;        return currentGas.getAddress();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get gas price&quot;, response = double.class, tags = &quot;getStationPrice&quot;)
+&nbsp;    @GetMapping(&quot;/station/price&quot;)
+&nbsp;    double getStationPrice(){
+<b class="nc">&nbsp;        return currentGas.getPrice();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get station description&quot;, response = String.class, tags = &quot;getStationDesc&quot;)
+&nbsp;    @GetMapping(&quot;/station/desc&quot;)
+&nbsp;    String getStationDesc(){
+<b class="nc">&nbsp;        return currentGas.getDescription();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //search
+&nbsp;    @ApiOperation(value = &quot;Get station by user id&quot;, response = GasInfo.class, tags = &quot;searchStations&quot;)
+&nbsp;    @GetMapping(&quot;station/search/{id}&quot;)
+&nbsp;    GasInfo searchStations(@PathVariable Long id){
+<b class="nc">&nbsp;        GasInfo station = gasControllerRepo.getByGasId(id);</b>
+<b class="nc">&nbsp;        System.out.println(station.getUserID());</b>
+<b class="nc">&nbsp;        return station;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Put user in station
+&nbsp;    @ApiOperation(value = &quot;Post user to station&quot;, response = accountInfo.class, tags = &quot;putUserInStation&quot;)
+&nbsp;    @PostMapping(&quot;/station/postUser/{id}&quot;)
+&nbsp;    accountInfo putUserInStation(@PathVariable long id){
+<b class="nc">&nbsp;        accountInfo user = userRepo.findById(id);</b>
+<b class="nc">&nbsp;        currentGas.setUserID(user);</b>
+<b class="nc">&nbsp;        gasControllerRepo.save(currentGas);</b>
+&nbsp;
+<b class="nc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //getUserID
+&nbsp;    @ApiOperation(value = &quot;Get user of station&quot;, response = accountInfo.class, tags = &quot;getUserIDFromStation&quot;)
+&nbsp;    @GetMapping(&quot;/station/get/{id}/userID&quot;)
+&nbsp;    accountInfo getUserIDFromStation(@PathVariable long id){
+<b class="nc">&nbsp;        GasInfo currGas = gasControllerRepo.getByGasId(id);</b>
+&nbsp;
+<b class="nc">&nbsp;        return currGas.getUserID();</b>
+&nbsp;    }
+&nbsp;    //deletes by ID
+&nbsp;    @ApiOperation(value = &quot;Delete a station by ID&quot;, response = GasInfo.class, tags = &quot;deleteGasID&quot;)
+&nbsp;    @DeleteMapping(&quot;/StationDelete/{id}&quot;)
+&nbsp;    public Map&lt;String, String&gt; deleteGasID(@PathVariable Long id){
+<b class="nc">&nbsp;        deleteGasID = gasControllerRepo.findByGasId(id);</b>
+<b class="nc">&nbsp;        gasControllerRepo.deleteAll(deleteGasID);</b>
+<b class="nc">&nbsp;        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        response.put(&quot;id&quot;, id +&quot;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;        //returns as json { &quot;id&quot;: &quot;1&quot; }
+&nbsp;        /**
+&nbsp;         * deleteUser = accountInfoRepository.findByUsername(username);
+&nbsp;         *
+&nbsp;         *         accountInfoRepository.deleteAll(deleteUser);
+&nbsp;         *         gasController.deleteGas(username);
+&nbsp;         *         Map&lt;String, String&gt; response = new HashMap&lt;&gt;();
+&nbsp;         *         response.put(&quot;username&quot;, username);
+&nbsp;         *
+&nbsp;         *         return response;
+&nbsp;         */
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Put to gas station&quot;, tags = &quot;deleteGas&quot;)
+&nbsp;    public void deleteGas(String username){
+&nbsp;
+<b class="fc">&nbsp;        deleteGas = gasControllerRepo.findByUsername(username);</b>
+<b class="fc">&nbsp;        gasControllerRepo.deleteAll(deleteGas);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get distance of station&quot;, response = Iterable.class, tags = &quot;getStationDistances&quot;)
+&nbsp;    @GetMapping(&quot;/station/{lat}/{lon}&quot;)
+&nbsp;    public  List&lt;GasInfo&gt; getStationDistances(@PathVariable Double lat, @PathVariable Double lon) {
+<b class="nc">&nbsp;        double lat1 = lat;</b>
+<b class="nc">&nbsp;        double lon1 = lon;</b>
+<b class="nc">&nbsp;        List&lt;GasInfo&gt; gasInfos = gasControllerRepo.findAll();</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        for (GasInfo current : gasInfos) {</b>
+<b class="nc">&nbsp;            if (current.getLat() != 0.0) {</b>
+<b class="nc">&nbsp;                double theta = lon1 - current.getLon(); // Formula of distance in miles</b>
+<b class="nc">&nbsp;                double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(current.getLat())) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(current.getLat())) * Math.cos(Math.toRadians(theta));</b>
+<b class="nc">&nbsp;                dist = Math.acos(dist);</b>
+<b class="nc">&nbsp;                dist = Math.toDegrees(dist);</b>
+<b class="nc">&nbsp;                dist = dist * 60 * 1.1515;</b>
+<b class="nc">&nbsp;                dist = dist * 0.8684;</b>
+<b class="nc">&nbsp;                current.setDist(dist);</b>
+&nbsp;
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        Collections.sort(gasInfos, Comparator.comparing(GasInfo::getDist));</b>
+&nbsp;
+<b class="nc">&nbsp;        return gasInfos.subList(0, Math.min(20, gasInfos.size()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/station/put/price/{sid}/{price}&quot;)
+&nbsp;    public GasInfo setStationPrice(@PathVariable long sid, @PathVariable double price){
+<b class="nc">&nbsp;        GasInfo station = gasControllerRepo.getByGasId(sid);</b>
+<b class="nc">&nbsp;        station.setPrice(price);</b>
+<b class="nc">&nbsp;        gasControllerRepo.save(station);</b>
+<b class="nc">&nbsp;        return station;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

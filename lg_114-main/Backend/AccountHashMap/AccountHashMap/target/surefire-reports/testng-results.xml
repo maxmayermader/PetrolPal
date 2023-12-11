@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="4" passed="4" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2023-12-04T09:12:12 CST" name="Surefire suite" finished-at="2023-12-04T09:12:30 CST" duration-ms="18302">
+    <groups>
+    </groups>
+    <test started-at="2023-12-04T09:12:12 CST" name="Surefire test" finished-at="2023-12-04T09:12:30 CST" duration-ms="18302">
+      <class name="org.example.GasControllerTests">
+        <test-method signature="testSignUp()" started-at="2023-12-04T09:12:30 CST" name="testSignUp" finished-at="2023-12-04T09:12:30 CST" duration-ms="206" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testSignUp -->
+        <test-method signature="testGetAllAccounts()" started-at="2023-12-04T09:12:30 CST" name="testGetAllAccounts" finished-at="2023-12-04T09:12:30 CST" duration-ms="195" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testGetAllAccounts -->
+      </class> <!-- org.example.GasControllerTests -->
+      <class name="org.example.AccountControllerTest">
+        <test-method signature="testGetAllAccounts()" started-at="2023-12-04T09:12:13 CST" name="testGetAllAccounts" finished-at="2023-12-04T09:12:30 CST" duration-ms="17423" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testGetAllAccounts -->
+        <test-method signature="testSignUp()" started-at="2023-12-04T09:12:13 CST" name="testSignUp" finished-at="2023-12-04T09:12:30 CST" duration-ms="17427" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testSignUp -->
+      </class> <!-- org.example.AccountControllerTest -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

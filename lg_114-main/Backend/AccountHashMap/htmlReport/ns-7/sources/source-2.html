@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ReportController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.report</a>
+</div>
+
+<h1>Coverage Summary for Class: ReportController (org.example.report)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ReportController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ReportController$$EnhancerBySpringCGLIB$$708d100c</td>
+  </tr>
+  <tr>
+    <td class="name">ReportController$$EnhancerBySpringCGLIB$$ef84d173</td>
+  </tr>
+  <tr>
+    <td class="name">ReportController$$EnhancerBySpringCGLIB$$ef84d173$$FastClassBySpringCGLIB$$692ae83</td>
+  </tr>
+  <tr>
+    <td class="name">ReportController$$FastClassBySpringCGLIB$$9d413dfc</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.report;
+&nbsp;
+&nbsp;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import io.swagger.annotations.ApiOperation;
+&nbsp;import io.swagger.annotations.ApiResponse;
+&nbsp;import io.swagger.annotations.ApiResponses;
+&nbsp;import org.example.account.UserRepo;
+&nbsp;import org.example.account.accountInfo;
+&nbsp;import org.example.gas.GasInfo;
+&nbsp;import org.example.gas.GasRepo;
+&nbsp;import org.example.reviews.Review;
+&nbsp;import org.example.reviews.ReviewRepo;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Api(value = &quot;ReportController&quot;, description = &quot;REST Apis related to Report&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class ReportController {</b>
+&nbsp;    @Autowired
+&nbsp;    private ReportRepo reportRepo;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepo userRepo;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GasRepo gasRepo;
+&nbsp;
+&nbsp;    @ApiOperation(value = &quot;Get list of Reports in the System &quot;, response = Iterable.class, tags = &quot;getAllReports&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(code = 200, message = &quot;Suceess|OK&quot;),
+&nbsp;            @ApiResponse(code = 401, message = &quot;not authorized!&quot;),
+&nbsp;            @ApiResponse(code = 403, message = &quot;forbidden!!!&quot;),
+&nbsp;            @ApiResponse(code = 404, message = &quot;not found!!!&quot;) })
+&nbsp;    @GetMapping(&quot;/report/all&quot;)
+&nbsp;    List&lt;Report&gt; getAllReports(){
+<b class="fc">&nbsp;        return reportRepo.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/report/post/{uid}/{sid}&quot;)
+&nbsp;    Report postReport(@PathVariable long uid, @PathVariable long sid, @RequestBody Report r){
+<b class="fc">&nbsp;        GasInfo station = gasRepo.getByGasId(sid);</b>
+<b class="fc">&nbsp;        accountInfo user = userRepo.findById(uid);</b>
+&nbsp;
+<b class="fc">&nbsp;        r.setUserID(user);</b>
+<b class="fc">&nbsp;        r.setGasID(station);</b>
+&nbsp;
+<b class="fc">&nbsp;        reportRepo.save(r);</b>
+<b class="fc">&nbsp;        return  r;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/report/station/{sid}&quot;)
+&nbsp;    List&lt;Report&gt; getByGas(@PathVariable long sid){
+<b class="fc">&nbsp;        GasInfo station = gasRepo.getByGasId(sid);</b>
+<b class="fc">&nbsp;        return reportRepo.getAllByGasID(station);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/report/delete/all&quot;)
+&nbsp;    void delReport(){
+<b class="fc">&nbsp;        reportRepo.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/report/delete/{sid}&quot;)
+&nbsp;    @Transactional
+&nbsp;    public void delReportByGas(@PathVariable long sid){
+<b class="fc">&nbsp;        reportRepo.removeAllByGasID(gasRepo.getByGasId(sid));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TestAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example</a>
+</div>
+
+<h1>Coverage Summary for Class: TestAPI (org.example)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TestAPI</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example;
+&nbsp;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;@RestController
+<b class="fc">&nbsp;public class TestAPI {</b>
+&nbsp;    /**
+&nbsp;    //https://developer.nrel.gov/docs/api-key/
+&nbsp;    private final String key = &quot;HUEewMlbB0EX4kBTvatOFtnuTGBjiEZfqfJC3zZs&quot;;
+&nbsp;    private final String URL = &quot;https://developer.nrel.gov/api/alt-fuel-stations/v1.json&quot;;
+&nbsp;//42.0097969728638, -93.65909532007964 //need to remove some numbers to make it work, -shorten
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getNearestStation&quot;) //http://localhost:8080/getNearestStation?location=24.0097, -94.6594&amp;radius=5
+&nbsp;    public String getNearestStation(@RequestParam String location, @RequestParam int radius) {
+&nbsp;        String url = URL + &quot;?location=&quot; + location + &quot;&amp;radius=&quot; + radius + &quot;&amp;limit=1&amp;api_key=&quot; + key;
+&nbsp;
+&nbsp;        RestTemplate restTemplate = new RestTemplate();
+&nbsp;        String response = restTemplate.getForObject(url, String.class);
+&nbsp;
+&nbsp;        return response;
+&nbsp;    }
+&nbsp;    @GetMapping(&quot;/getStation&quot;)
+&nbsp;    public String getStation() {
+&nbsp;        String url = URL + &quot;.json?limit=1&amp;api_key=&quot; + key;
+&nbsp;
+&nbsp;
+&nbsp;        return &quot;GET Request to NREL API: &quot; + url;
+&nbsp;    }
+&nbsp;**/
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-04 13:54</div>
+</div>
+</body>
+</html>
